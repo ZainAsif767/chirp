@@ -1,4 +1,4 @@
-<h1>Listing Posts</h1>
+<h1>Time Line</h1>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.post_index_path(@socket, :index)}>
@@ -13,33 +13,10 @@
   </.modal>
 <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Username</th>
-      <th>Body</th>
-      <th>Like count</th>
-      <th>Reposts count</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="posts">
+<div id="posts" phx-update="prepend">
     <%= for post <- @posts do %>
-      <tr id={"post-#{post.id}"}>
-        <td><%= post.username %></td>
-        <td><%= post.body %></td>
-        <td><%= post.like_count %></td>
-        <td><%= post.reposts_count %></td>
-
-        <td>
-          <span><%= live_redirect "Show", to: Routes.post_show_path(@socket, :show, post) %></span>
-          <span><%= live_patch "Edit", to: Routes.post_index_path(@socket, :edit, post) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: post.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
+      <%= live_component ChirpWeb.PostLive.PostComponent, id: post.id, post: post %>
     <% end %>
-  </tbody>
-</table>
+</div>
 
 <span><%= live_patch "New Post", to: Routes.post_index_path(@socket, :new) %></span>
